@@ -1,17 +1,29 @@
 package main
 
-import "github.com/gin-gonic/gin"
+import (
+	"net/http"
+
+	"example.com/goserver/app"
+	"github.com/gin-gonic/gin"
+)
+
+var store app.Store
 
 func newApp(c *gin.Context) {
-	c.JSON(200, gin.H{
-		"message": "pong",
+	var app app.Meta
+
+	if err := c.ShouldBindYAML(&app); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	store.Add(app)
+	c.JSON(http.StatusCreated, gin.H{
+		"message": app.Title,
 	})
 }
 
 func listApps(c *gin.Context) {
-	c.JSON(200, gin.H{
-		"message": "apps",
-	})
+	c.JSON(http.StatusOK, store.List())
 }
 
 func main() {
