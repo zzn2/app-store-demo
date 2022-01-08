@@ -22,5 +22,5 @@ func main() {
 		v1.GET("/apps", listApps)
 	}
 
-	router.Run(":8081")
+	router.Run(":3001")
 }
