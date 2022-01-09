@@ -82,6 +82,11 @@ func NewRule(nameAndOp string, value string) (*Rule, error) {
 	}, nil
 }
 
+func ParseRule(text string) (*Rule, error) {
+	keyAndValue := strings.SplitN(text, "=", 2)
+	return NewRule(keyAndValue[0], keyAndValue[1])
+}
+
 // Match checks whether the given obj satisfies the rule.
 func (r *Rule) Evaluate(value string) (bool, error) {
 	// TODO: How to support generic type for input value?
