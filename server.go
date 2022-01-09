@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"example.com/goserver/app"
+	"example.com/goserver/filter"
 	"github.com/gin-gonic/gin"
 )
 
@@ -23,7 +24,17 @@ func newApp(c *gin.Context) {
 }
 
 func listApps(c *gin.Context) {
-	c.JSON(http.StatusOK, store.List())
+	q := c.Request.URL.Query()
+	flt, err := filter.Create(q)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	}
+
+	result, err := store.List(*flt)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	}
+	c.JSON(http.StatusOK, result)
 }
 
 func main() {
