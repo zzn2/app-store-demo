@@ -3,7 +3,9 @@ package filter
 import (
 	"errors"
 	"fmt"
+	"reflect"
 	"regexp"
+	"strings"
 
 	"example.com/goserver/filter/op"
 )
@@ -18,7 +20,7 @@ import (
 type Rule struct {
 	FieldName string
 	Op        op.Operator
-	Value     interface{}
+	Value     string
 }
 
 var (
@@ -60,7 +62,7 @@ func getNameAndOp(text string) (name string, operator op.Operator, err error) {
 // value refers the value attached to the check rule.
 // e.g.
 //
-//    name[like], Tom  -> name likes "Tom"
+//    name[like]=Tom   -> name likes "Tom"
 //    name=Tome        -> name is exactly "Tom"
 //    age[gt]=25       -> age > 25
 //
@@ -78,6 +80,46 @@ func NewRule(nameAndOp string, value string) (*Rule, error) {
 		Op:        operator,
 		Value:     value,
 	}, nil
+}
+
+// Match checks whether the given obj satisfies the rule.
+func (r *Rule) Match(obj interface{}) (bool, error) {
+	value, err := getStringFieldValue(obj, r.FieldName)
+	if err != nil {
+		return false, err
+	}
+
+	// TODO: This part can be moved into Operator.
+	switch r.Op {
+	case op.Equals:
+		return r.Value == value, nil
+	case op.Like:
+		return strings.Contains(value, string(r.Value)), nil
+	default:
+		return false, errors.New(fmt.Sprintf("Operator %s currently unsupported.", r.Op))
+	}
+}
+
+func getStringFieldValue(obj interface{}, fieldName string) (string, error) {
+	// TODO: support non-case sensitive case
+	if reflect.ValueOf(obj).Kind() == reflect.Struct {
+		typ := reflect.TypeOf(obj)
+		_, exists := typ.FieldByName(fieldName)
+		if !exists {
+			return "", errors.New(fmt.Sprintf("Field '%s' does not exist in struct %s.", fieldName, typ))
+		}
+
+		v := reflect.ValueOf(obj)
+		field := v.FieldByName(fieldName)
+		kind := field.Kind()
+		if kind != reflect.String {
+			return "", errors.New(fmt.Sprintf("Field '%s' is with '%s' type. Currently only supports 'string' fileds.", fieldName, kind))
+		}
+
+		return field.String(), nil
+	} else {
+		return "", errors.New(fmt.Sprintf("Obj '%s' is with '%T' type. Currently only supports structs.", obj, obj))
+	}
 }
 
 func (r Rule) String() string {

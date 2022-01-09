@@ -128,3 +128,190 @@ func TestNewRule(t *testing.T) {
 		})
 	}
 }
+
+func TestRuleMatch(t *testing.T) {
+	type Employee struct {
+		FirstName string
+		LastName  string
+		Age       int
+	}
+	var tomGreen = Employee{
+		FirstName: "Tom",
+		LastName:  "Green",
+		Age:       25,
+	}
+
+	var tests = []struct {
+		ruleText       string
+		inputObj       Employee
+		expectedResult bool
+		expectedErrMsg string
+	}{
+		{
+			"FirstName=Tom",
+			tomGreen,
+			true,
+			"",
+		},
+		{
+			"LastName=Tom",
+			tomGreen,
+			false,
+			"",
+		},
+		{
+			"LastName=ree",
+			tomGreen,
+			false,
+			"",
+		},
+		{
+			"LastName[Like]=ree",
+			tomGreen,
+			true,
+			"",
+		},
+		{
+			"LastName[Like]=Gre",
+			tomGreen,
+			true,
+			"",
+		},
+		{
+			"LastName[Like]=een",
+			tomGreen,
+			true,
+			"",
+		},
+		{
+			"LastName[Like]=Green",
+			tomGreen,
+			true,
+			"",
+		},
+		{
+			"Age[gt]=25",
+			tomGreen,
+			false,
+			"Field 'Age' is with 'int' type. Currently only supports 'string' fileds.",
+		},
+		{
+			"Address=Beijing",
+			tomGreen,
+			false,
+			"Field 'Address' does not exist in struct filter.Employee.",
+		},
+	}
+
+	for _, tt := range tests {
+		testName := tt.ruleText
+		t.Run(testName, func(t *testing.T) {
+			keyAndValue := strings.Split(tt.ruleText, "=")
+			rule, _ := NewRule(keyAndValue[0], keyAndValue[1])
+			match, err := rule.Match(tt.inputObj)
+			if match != tt.expectedResult {
+				t.Errorf("Expect '%v' but got '%v'.", tt.expectedResult, match)
+			}
+			if err != nil {
+				if err.Error() != tt.expectedErrMsg {
+					t.Errorf("Expect err to be '%s' but got '%s'.", tt.expectedErrMsg, err.Error())
+				}
+			}
+		})
+	}
+
+}
+
+func TestGetStringFieldValue(t *testing.T) {
+	type Employee struct {
+		FirstName string
+		LastName  string
+		Age       int
+	}
+	var tomGreen = Employee{
+		FirstName: "Tom",
+		LastName:  "Green",
+		Age:       25,
+	}
+
+	var tests = []struct {
+		testName       string
+		inputObj       Employee
+		fieldName      string
+		expectedValue  string
+		expectedErrMsg string
+	}{
+		{
+			"Normal case",
+			tomGreen,
+			"FirstName",
+			"Tom",
+			"",
+		},
+		{
+			"Normal case 2",
+			tomGreen,
+			"LastName",
+			"Green",
+			"",
+		},
+		{
+			"Refer to non-string field",
+			tomGreen,
+			"Age",
+			"",
+			"Field 'Age' is with 'int' type. Currently only supports 'string' fileds.",
+		},
+		{
+			"Refer to non-exist field",
+			tomGreen,
+			"Address",
+			"",
+			"Field 'Address' does not exist in struct filter.Employee.",
+		},
+		{
+			"Refer to non-struct type",
+			tomGreen, // This field is not referenced. It will be replaced to a plain string later.
+			"NonStruct",
+			"",
+			"Obj 'plain string' is with 'string' type. Currently only supports structs.",
+		},
+		/*
+			Skip for now since it is not on the critical path.
+			TODO: Enable when possible.
+				{
+					"Reference with pointer",
+					tomGreen, // This field is not referenced. It will be replaced to a plain string later.
+					"FirstName",
+					"Tom",
+					"",
+				},
+		*/
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.testName, func(t *testing.T) {
+			var obj interface{} = tt.inputObj
+
+			// The value in `tests` slice must be with `Employee` type.
+			// However, we do need some test case for non-Employee types.
+			// So we are overriding them here for hack.
+			// TODO: Find a better way to do so.
+			if tt.testName == "Refer to non-struct type" {
+				obj = "plain string"
+			} else if tt.testName == "Reference with pointer" {
+				obj = &tomGreen
+			}
+
+			value, err := getStringFieldValue(obj, tt.fieldName)
+			if value != tt.expectedValue {
+				t.Errorf("Expect '%s' but got '%s'.", tt.expectedValue, value)
+			}
+			if err != nil {
+				if err.Error() != tt.expectedErrMsg {
+					t.Errorf("Expect err to be '%s' but got '%s'.", tt.expectedErrMsg, err.Error())
+				}
+			}
+		})
+	}
+}
