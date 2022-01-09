@@ -7,14 +7,14 @@ import (
 	"strings"
 )
 
-type Filter struct {
-	rules []Rule
+type RuleSet struct {
+	Rules []Rule
 }
 
 // Create accepts a map generated from query params and parse them
-// as a set of rules and build them inside the Filter.
-func Create(queryParams map[string][]string) (*Filter, error) {
-	flt := &Filter{}
+// as a set of rules and build them inside the RuleSet.
+func Create(queryParams map[string][]string) (*RuleSet, error) {
+	flt := &RuleSet{}
 	for key, value := range queryParams {
 		if len(value) > 1 {
 			return nil, errors.New(fmt.Sprintf("Key '%s' appeared multiple times with values of '%s'. Currently this case is not unsupported.", key, strings.Join(value, ", ")))
@@ -29,16 +29,16 @@ func Create(queryParams map[string][]string) (*Filter, error) {
 	return flt, nil
 }
 
-// addRule adds a new rule to the given Filter.
-func (f *Filter) addRule(rule Rule) {
-	f.rules = append(f.rules, rule)
+// addRule adds a new rule to the given RuleSet.
+func (f *RuleSet) addRule(rule Rule) {
+	f.Rules = append(f.Rules, rule)
 }
 
 // Match checks whether the given obj matches the filter f.
 // It returns true if matches, otherwise returns false.
-func (f *Filter) Match(obj interface{}) (bool, error) {
-	for _, rule := range f.rules {
-		match, err := rule.Match(obj)
+func (f *RuleSet) Match(valueProvider func(string) (string, error)) (bool, error) {
+	for _, rule := range f.Rules {
+		match, err := rule.Evaluate("")
 		if err != nil {
 			return false, err
 		}
@@ -51,6 +51,6 @@ func (f *Filter) Match(obj interface{}) (bool, error) {
 	return true, nil
 }
 
-func (f Filter) String() string {
-	return fmt.Sprintf("Filter: %s", f.rules)
+func (f RuleSet) String() string {
+	return fmt.Sprintf("RuleSet: %s", f.Rules)
 }

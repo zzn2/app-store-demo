@@ -83,12 +83,8 @@ func NewRule(nameAndOp string, value string) (*Rule, error) {
 }
 
 // Match checks whether the given obj satisfies the rule.
-func (r *Rule) Match(obj interface{}) (bool, error) {
-	value, err := getStringFieldValue(obj, r.FieldName)
-	if err != nil {
-		return false, err
-	}
-
+func (r *Rule) Evaluate(value string) (bool, error) {
+	// TODO: How to support generic type for input value?
 	// TODO: This part can be moved into Operator.
 	switch r.Op {
 	case op.Equals:

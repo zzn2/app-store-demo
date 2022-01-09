@@ -15,10 +15,10 @@ func (s *Store) Add(app Meta) {
 	s.apps = append(s.apps, app)
 }
 
-func (s *Store) List(flt filter.Filter) ([]Meta, error) {
+func (s *Store) List(ruleSet filter.RuleSet) ([]Meta, error) {
 	result := make([]Meta, 0)
 	for _, app := range s.apps {
-		matched, err := flt.Match(app)
+		matched, err := app.MatchRuleSet(ruleSet)
 		if err != nil {
 			return result, errors.New(fmt.Sprintf("Error occurred during searching app: %s", err))
 		}
