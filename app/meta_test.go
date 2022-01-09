@@ -20,10 +20,12 @@ description: |
  Some application content, and description
 `
 
-	var meta Meta
-	err := meta.Parse([]byte(input))
+	app, err := Parse([]byte(input))
 
 	if err != nil {
 		t.Fatalf(`Expected to be succeed but failed`)
+	}
+	if app.Title != "Valid App 1" {
+		t.Fatalf("failed")
 	}
 }
