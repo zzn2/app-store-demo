@@ -25,3 +25,14 @@ description: |
 GET {{baseUrl}}/apps
 Content-Type: application/json
 Accept: application/json
+
+
+### Search apps (by full text search)
+GET {{baseUrl}}/apps?q=App
+
+
+### Search apps (by specific field)
+GET {{baseUrl}}/apps?title[like]=App
+
+### Only response title and version
+GET {{baseUrl}}/apps?fields=title,version
