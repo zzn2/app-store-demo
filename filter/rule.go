@@ -25,7 +25,7 @@ type Rule struct {
 
 var (
 	regexForPlainParam          = regexp.MustCompile(`^[a-zA-Z0-9.]+$`)
-	regexForParamWithLhsBracket = regexp.MustCompile(`^(?P<name>[a-zA-Z0-9]+)\[(?P<op>[a-zA-Z]*)\]$`)
+	regexForParamWithLhsBracket = regexp.MustCompile(`^(?P<name>[a-zA-Z0-9.]+)\[(?P<op>[a-zA-Z]*)\]$`)
 )
 
 // getNameAndOp parses a given text and separate them into name and operator.
