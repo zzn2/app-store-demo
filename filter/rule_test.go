@@ -78,7 +78,7 @@ func TestGetNameAndOp(t *testing.T) {
 	}
 }
 
-func TestNew(t *testing.T) {
+func TestNewRule(t *testing.T) {
 	var tests = []struct {
 		input           string
 		expectedRuleStr string
@@ -115,7 +115,7 @@ func TestNew(t *testing.T) {
 		testName := tt.input
 		t.Run(testName, func(t *testing.T) {
 			keyAndValue := strings.Split(tt.input, "=")
-			rule, err := New(keyAndValue[0], keyAndValue[1])
+			rule, err := NewRule(keyAndValue[0], keyAndValue[1])
 			str := fmt.Sprintf("%s", rule)
 			if str != tt.expectedRuleStr {
 				t.Errorf("Expect '%s' but got '%s'.", tt.expectedRuleStr, str)

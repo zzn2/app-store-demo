@@ -64,7 +64,7 @@ func getNameAndOp(text string) (name string, operator op.Operator, err error) {
 //    name=Tome        -> name is exactly "Tom"
 //    age[gt]=25       -> age > 25
 //
-func New(nameAndOp string, value string) (*Rule, error) {
+func NewRule(nameAndOp string, value string) (*Rule, error) {
 	name, operator, error := getNameAndOp(nameAndOp)
 	if error != nil {
 		return nil, error
