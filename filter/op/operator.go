@@ -39,6 +39,6 @@ func Parse(text string) (Operator, error) {
 	case "gt":
 		return GreaterThan, nil
 	default:
-		return Unknown, errors.New(fmt.Sprintf("Unrecognized operation type '%s'", text))
+		return Unknown, errors.New(fmt.Sprintf("Unrecognized operator type '%s'", text))
 	}
 }

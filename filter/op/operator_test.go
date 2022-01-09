@@ -14,7 +14,7 @@ func TestParse(t *testing.T) {
 		{"LIKE", Like, ""},
 		{"lt", LessThan, ""},
 		{"gt", GreaterThan, ""},
-		{"other", Unknown, "Unrecognized operation type 'other'"},
+		{"other", Unknown, "Unrecognized operator type 'other'"},
 	}
 
 	for _, tt := range tests {
