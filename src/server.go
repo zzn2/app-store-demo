@@ -15,7 +15,7 @@ func newApp(c *gin.Context) {
 	var app app.Meta
 
 	if err := c.ShouldBindYAML(&app); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, responseBodyForError(err))
 		return
 	}
 	store.Add(app)
@@ -28,7 +28,7 @@ func getAppByTitle(c *gin.Context) {
 	if app != nil {
 		c.JSON(http.StatusOK, app)
 	} else {
-		c.JSON(http.StatusNotFound, gin.H{"error": fmt.Sprintf("App with title '%s' does not exist.", title)})
+		c.JSON(http.StatusNotFound, responseBodyForErrorMessage("App with title '%s' does not exist.", title))
 	}
 }
 
@@ -36,14 +36,23 @@ func listApps(c *gin.Context) {
 	q := c.Request.URL.Query()
 	flt, err := filter.Create(q)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, responseBodyForError(err))
 	}
 
 	result, err := store.List(*flt)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, responseBodyForError(err))
 	}
 	c.JSON(http.StatusOK, result)
+}
+
+// errorResponse replys a general error response
+func responseBodyForError(err error) map[string]interface{} {
+	return responseBodyForErrorMessage(err.Error())
+}
+
+func responseBodyForErrorMessage(format string, a ...interface{}) map[string]interface{} {
+	return gin.H{"error": fmt.Sprintf(format, a...)}
 }
 
 func main() {
