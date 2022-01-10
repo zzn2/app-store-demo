@@ -20,6 +20,25 @@ description: |
  ### Interesting Title
  Some application content, and description
 
+### Add a invalid app
+POST {{baseUrl}}/apps
+Content-Type: application/json
+Accept: application/json
+
+unknown: dummy
+title: Valid App 1
+version: 0.0.1
+maintainers:
+- name: 1
+  email: abc@def.org
+website: http://1
+company: random inc.
+source: https://github.com/random/repo
+license: Apache-2.0
+description: |
+ ### Interesting Title
+ Some application content, and description
+ multi line
 
 ### List apps
 GET {{baseUrl}}/apps
@@ -33,6 +52,13 @@ GET {{baseUrl}}/apps?q=App
 
 ### Search apps (by specific field)
 GET {{baseUrl}}/apps?title[like]=App
+
+
+### Search apps (by specific field)
+GET {{baseUrl}}/apps?maintainer.name[like]=App
+
+### Search apps (precise match)
+GET {{baseUrl}}/apps?title=App
 
 ### Only response title and version
 GET {{baseUrl}}/apps?fields=title,version
