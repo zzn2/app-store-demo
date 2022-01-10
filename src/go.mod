@@ -1,4 +1,4 @@
-module example.com/goserver
+module github.com/zzn2/demo/appstore
 
 go 1.17
 

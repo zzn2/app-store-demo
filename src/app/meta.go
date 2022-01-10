@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strings"
 
-	"example.com/goserver/filter"
+	"github.com/zzn2/demo/appstore/filter"
 	"gopkg.in/yaml.v2"
 )
 

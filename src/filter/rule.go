@@ -7,7 +7,7 @@ import (
 	"regexp"
 	"strings"
 
-	"example.com/goserver/filter/op"
+	"github.com/zzn2/demo/appstore/filter/op"
 )
 
 // Rule describes a filter rule.

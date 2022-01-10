@@ -3,7 +3,7 @@ package app
 import (
 	"testing"
 
-	"example.com/goserver/filter"
+	"github.com/zzn2/demo/appstore/filter"
 )
 
 const sampleInput = `

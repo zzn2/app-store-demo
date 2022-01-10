@@ -5,7 +5,7 @@ import (
 	"strings"
 	"testing"
 
-	"example.com/goserver/filter/op"
+	"github.com/zzn2/demo/appstore/filter/op"
 )
 
 func TestGetNameAndOp(t *testing.T) {

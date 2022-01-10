@@ -3,7 +3,7 @@ package filter
 import (
 	"testing"
 
-	"example.com/goserver/app"
+	"github.com/zzn2/demo/appstore/app"
 )
 
 func TestMatch(t *testing.T) {

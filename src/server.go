@@ -3,9 +3,9 @@ package main
 import (
 	"net/http"
 
-	"example.com/goserver/app"
-	"example.com/goserver/filter"
 	"github.com/gin-gonic/gin"
+	"github.com/zzn2/demo/appstore/app"
+	"github.com/zzn2/demo/appstore/filter"
 )
 
 var store app.Store
