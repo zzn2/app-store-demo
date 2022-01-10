@@ -5,7 +5,7 @@ POST {{baseUrl}}/apps
 Content-Type: application/json
 Accept: application/json
 
-title: Valid App 1
+title: App1
 version: 0.0.1
 maintainers:
 - name: firstmaintainer app1
@@ -49,6 +49,12 @@ Accept: application/json
 ### Search apps (by full text search)
 GET {{baseUrl}}/apps?q=App
 
+### Get app by name
+GET {{baseUrl}}/apps/App1
+
+
+### Get a non-exist app
+GET {{baseUrl}}/apps/App6
 
 ### Search apps (by specific field)
 GET {{baseUrl}}/apps?title[like]=App

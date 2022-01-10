@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -19,6 +20,16 @@ func newApp(c *gin.Context) {
 	}
 	store.Add(app)
 	c.JSON(http.StatusCreated, app)
+}
+
+func getAppByTitle(c *gin.Context) {
+	title := c.Param("title")
+	app := store.GetByTitle(title)
+	if app != nil {
+		c.JSON(http.StatusOK, app)
+	} else {
+		c.JSON(http.StatusNotFound, gin.H{"error": fmt.Sprintf("App with title '%s' does not exist.", title)})
+	}
 }
 
 func listApps(c *gin.Context) {
@@ -41,6 +52,7 @@ func main() {
 	{
 		v1.POST("/apps", newApp)
 		v1.GET("/apps", listApps)
+		v1.GET("/apps/:title", getAppByTitle)
 	}
 
 	router.Run(":3001")
