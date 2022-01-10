@@ -13,7 +13,7 @@ spec:
     spec:
       containers:
         - name: app-store-apis
-          image: zzn2/app-store-demo
+          image: {{.Values.registry}}/app-store-demo:{{.Values.dockerTag}}
           resources:
             requests:
               cpu: 100m
