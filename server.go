@@ -18,9 +18,7 @@ func newApp(c *gin.Context) {
 		return
 	}
 	store.Add(app)
-	c.JSON(http.StatusCreated, gin.H{
-		"message": app.Title,
-	})
+	c.JSON(http.StatusCreated, app)
 }
 
 func listApps(c *gin.Context) {
