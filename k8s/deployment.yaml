@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-store
+spec:
+  selector:
+    matchLabels:
+      app: app-store-apis
+  template:
+    metadata:
+      labels:
+        app: app-store-apis
+    spec:
+      containers:
+        - name: app-store-apis
+          image: zzn2/app-store-demo
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 250m
+              memory: 256Mi
+          env:
+            - name: GIN_MODE
+              value: release
+          ports:
+            - containerPort: 3001
+              name: http
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: app-store
+spec:
+  type: LoadBalancer
+  selector:
+    app: app-store-apis
+  ports:
+    - port: 80
+      name: http
+      protocol: TCP
+      targetPort: http
