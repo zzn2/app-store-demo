@@ -9,18 +9,20 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
+type Maintainer struct {
+	Name  string `binding:"required"`
+	Email string `binding:"required,email"`
+}
+
 type Meta struct {
-	Title       string
-	Version     string
-	Maintainers []struct {
-		Name  string
-		Email string
-	}
-	Company     string
-	Website     string
-	Source      string
-	License     string
-	Description string
+	Title       string       `binding:"required"`
+	Version     string       `binding:"required"`
+	Maintainers []Maintainer `binding:"required,dive"`
+	Company     string       `binding:"required"`
+	Website     string       `binding:"required,url"`
+	Source      string       `binding:"required"`
+	License     string       `binding:"required"`
+	Description string       `binding:"required"`
 }
 
 func Parse(data []byte) (*Meta, error) {
