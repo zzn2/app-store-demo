@@ -38,6 +38,8 @@ func (m *Meta) MatchRule(rule filter.Rule) (bool, error) {
 	switch strings.ToLower(rule.FieldName) {
 	case "title":
 		return rule.Evaluate(m.Title)
+	case "version":
+		return rule.Evaluate(m.Version)
 	case "maintainer.name":
 		for _, maintainer := range m.Maintainers {
 			match, err := rule.Evaluate(maintainer.Name)
