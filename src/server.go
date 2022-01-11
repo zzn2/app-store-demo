@@ -19,10 +19,10 @@ func newApp(c *gin.Context) {
 		return
 	}
 
-	if store.GetByTitleAndVersion(app.Title, app.Version) != nil {
-		c.JSON(http.StatusBadRequest, responseBodyForErrorMessage("App '%s' with version '%s' already exists.", app.Title, app.Version))
+	err := store.Add(app)
+	if err != nil {
+		c.JSON(http.StatusConflict, responseBodyForError(err))
 	} else {
-		store.Add(app)
 		c.JSON(http.StatusCreated, app)
 	}
 }

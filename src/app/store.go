@@ -11,8 +11,14 @@ type Store struct {
 	apps []Meta
 }
 
-func (s *Store) Add(app Meta) {
+// Add a new app metadata into the store.
+// It returns error if the store already contains an app with the same title and version.
+func (s *Store) Add(app Meta) error {
+	if s.GetByTitleAndVersion(app.Title, app.Version) != nil {
+		return errors.New(fmt.Sprintf("App '%s' with version '%s' already exists.", app.Title, app.Version))
+	}
 	s.apps = append(s.apps, app)
+	return nil
 }
 
 func (s *Store) GetByTitle(title string) *Meta {

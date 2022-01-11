@@ -193,12 +193,12 @@ var scenarios = []struct {
 		}`,
 	},
 	{
-		"Create app with existing name and version, response 400",
+		"Create app with existing name and version, response 409 Conflict",
 		[]Request{
 			{"POST", "/apps", app1v1},
 			{"POST", "/apps", app1v1},
 		},
-		400,
+		409,
 		`{"error":"App 'App1' with version '0.0.1' already exists."}`,
 	},
 	{
