@@ -9,7 +9,7 @@ import (
 	"github.com/zzn2/demo/appstore/filter"
 )
 
-var store app.Store
+var store *app.Store
 
 func newApp(c *gin.Context) {
 	var app app.Meta
@@ -18,6 +18,7 @@ func newApp(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, responseBodyForError(err))
 		return
 	}
+
 	if store.GetByTitleAndVersion(app.Title, app.Version) != nil {
 		c.JSON(http.StatusBadRequest, responseBodyForErrorMessage("App '%s' with version '%s' already exists.", app.Title, app.Version))
 	} else {
@@ -61,16 +62,18 @@ func listApps(c *gin.Context) {
 	c.JSON(http.StatusOK, result)
 }
 
-// errorResponse replys a general error response
 func responseBodyForError(err error) map[string]interface{} {
 	return responseBodyForErrorMessage(err.Error())
 }
 
+// responseBodyForErrorMessage is aimed to format the response body of bad requests.
+// All the bad requests will go through this function so that the error responses will have the same format.
+// This makes the consumer of our APIs easier to write error handling logic.
 func responseBodyForErrorMessage(format string, a ...interface{}) map[string]interface{} {
 	return gin.H{"error": fmt.Sprintf(format, a...)}
 }
 
-func main() {
+func setupServer() *gin.Engine {
 	router := gin.Default()
 	v1 := router.Group("/v1")
 	{
@@ -80,5 +83,17 @@ func main() {
 		v1.GET("/apps/:title/versions/:version", getAppByTitleAndVersion)
 	}
 
-	router.Run(":3001")
+	return router
+}
+
+// clearStore clears the existing app store, replace with a new empty one.
+// This function is not supposed to be called in production code.
+// it is aimed to be called by integration test code to make a clean status for every test scenario.
+func clearStore() {
+	var emptyStore app.Store
+	store = &emptyStore
+}
+
+func main() {
+	setupServer().Run(":3001")
 }
