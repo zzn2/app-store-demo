@@ -58,3 +58,5 @@ Filters can also be non-precise match by specifying with [LHS Brackets](https://
 ```
 GET /apps?title[like]=App
 ```
+
+Refer to [integration test scenarios](src/api_integration_test.go) for more use cases.
