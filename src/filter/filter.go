@@ -1,4 +1,4 @@
-// Package filter provides primitives for filtering objects.
+// Package filter provides definitions used for RuleSet to filter objects.
 package filter
 
 import (
@@ -7,6 +7,7 @@ import (
 	"strings"
 )
 
+// RuleSet consists a set of Rules.
 type RuleSet struct {
 	Rules []Rule
 }

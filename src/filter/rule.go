@@ -10,7 +10,7 @@ import (
 	"github.com/zzn2/demo/appstore/filter/op"
 )
 
-// Rule describes a filter rule.
+// Rule describes a matching rule.
 // Typically it is defined in a query string using LHS brackets like:
 //
 //    name[like]=Tom -> To find name like "Tom"
@@ -57,7 +57,7 @@ func getNameAndOp(text string) (name string, operator op.Operator, err error) {
 	}
 }
 
-// New creates a new instance of Rule.
+// NewRule creates a new instance of Rule.
 // The nameAndOp shows the parameter name to be validated and with a operational operator in LHS bracket.
 // value refers the value attached to the check rule.
 // e.g.
@@ -82,6 +82,13 @@ func NewRule(nameAndOp string, value string) (*Rule, error) {
 	}, nil
 }
 
+// ParseRule parses text representation (samples listed below) into new instance of Rule.
+//
+//    name[like]=Tom   -> name likes "Tom"
+//    name=Tome        -> name is exactly "Tom"
+//    age[gt]=25       -> age > 25
+//
+// If failed to parse, it returns nil and the detail error.
 func ParseRule(text string) (*Rule, error) {
 	keyAndValue := strings.SplitN(text, "=", 2)
 	return NewRule(keyAndValue[0], keyAndValue[1])
@@ -89,7 +96,6 @@ func ParseRule(text string) (*Rule, error) {
 
 // Match checks whether the given obj satisfies the rule.
 func (r *Rule) Evaluate(value string) (bool, error) {
-	// TODO: How to support generic type for input value?
 	// TODO: This part can be moved into Operator.
 	switch r.Op {
 	case op.Equals:
