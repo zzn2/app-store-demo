@@ -2,7 +2,6 @@ package filter
 
 import (
 	"fmt"
-	"strings"
 	"testing"
 
 	"github.com/zzn2/demo/appstore/filter/op"
@@ -78,7 +77,7 @@ func TestGetNameAndOp(t *testing.T) {
 	}
 }
 
-func TestNewRule(t *testing.T) {
+func TestParseRule(t *testing.T) {
 	var tests = []struct {
 		input           string
 		expectedRuleStr string
@@ -114,8 +113,7 @@ func TestNewRule(t *testing.T) {
 	for _, tt := range tests {
 		testName := tt.input
 		t.Run(testName, func(t *testing.T) {
-			keyAndValue := strings.Split(tt.input, "=")
-			rule, err := NewRule(keyAndValue[0], keyAndValue[1])
+			rule, err := ParseRule(tt.input)
 			str := fmt.Sprintf("%s", rule)
 			if str != tt.expectedRuleStr {
 				t.Errorf("Expect '%s' but got '%s'.", tt.expectedRuleStr, str)
@@ -129,86 +127,68 @@ func TestNewRule(t *testing.T) {
 	}
 }
 
-func TestRuleMatch(t *testing.T) {
-	type Employee struct {
-		FirstName string
-		LastName  string
-		Age       int
-	}
-	var tomGreen = Employee{
-		FirstName: "Tom",
-		LastName:  "Green",
-		Age:       25,
-	}
-
+func TestEvaluate(t *testing.T) {
 	var tests = []struct {
-		ruleText       string
-		inputObj       Employee
-		expectedResult bool
-		expectedErrMsg string
+		ruleText        string
+		valueToEvaluate string
+		expectedResult  bool
+		expectedErrMsg  string
 	}{
 		{
 			"FirstName=Tom",
-			tomGreen,
+			"Tom",
 			true,
 			"",
 		},
 		{
 			"LastName=Tom",
-			tomGreen,
+			"Green",
 			false,
 			"",
 		},
 		{
 			"LastName=ree",
-			tomGreen,
+			"Green",
 			false,
 			"",
 		},
 		{
 			"LastName[Like]=ree",
-			tomGreen,
+			"Green",
 			true,
 			"",
 		},
 		{
 			"LastName[Like]=Gre",
-			tomGreen,
+			"Green",
 			true,
 			"",
 		},
 		{
 			"LastName[Like]=een",
-			tomGreen,
+			"Green",
 			true,
 			"",
 		},
 		{
 			"LastName[Like]=Green",
-			tomGreen,
+			"Green",
 			true,
 			"",
 		},
 		{
 			"Age[gt]=25",
-			tomGreen,
+			"20",
 			false,
-			"Field 'Age' is with 'int' type. Currently only supports 'string' fileds.",
-		},
-		{
-			"Address=Beijing",
-			tomGreen,
-			false,
-			"Field 'Address' does not exist in struct filter.Employee.",
+			"Operator '>' currently unsupported.",
 		},
 	}
 
 	for _, tt := range tests {
 		testName := tt.ruleText
 		t.Run(testName, func(t *testing.T) {
-			keyAndValue := strings.Split(tt.ruleText, "=")
-			rule, _ := NewRule(keyAndValue[0], keyAndValue[1])
-			match, err := rule.Match(tt.inputObj)
+			rule, _ := ParseRule(tt.ruleText)
+			match, err := rule.Evaluate(tt.valueToEvaluate)
 			if match != tt.expectedResult {
 				t.Errorf("Expect '%v' but got '%v'.", tt.expectedResult, match)
 			}

@@ -103,7 +103,7 @@ func (r *Rule) Evaluate(value string) (bool, error) {
 	case op.Like:
 		return strings.Contains(value, string(r.Value)), nil
 	default:
-		return false, errors.New(fmt.Sprintf("Operator %s currently unsupported.", r.Op))
+		return false, errors.New(fmt.Sprintf("Operator '%s' currently unsupported.", r.Op))
 	}
 }
 

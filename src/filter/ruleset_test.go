@@ -2,47 +2,54 @@ package filter
 
 import (
 	"testing"
-
-	"github.com/zzn2/demo/appstore/app"
 )
 
-func TestMatch(t *testing.T) {
-	flt, err := Create(map[string][]string{
+func TestCreate(t *testing.T) {
+	ruleSet, err := CreateRuleSet(map[string][]string{
 		"title[like]": {"App"},
 		"version":     {"0.0.1"},
 	})
 	if err != nil {
-		t.Errorf("Failed to create filter")
+		t.Errorf("Failed to create RuleSet: %e", err)
 	}
 
-	input := `
-title: Valid App 1
-version: 0.0.1
-maintainers:
-- name: firstmaintainer app1
-  email: firstmaintainer@hotmail.com
-- name: secondmaintainer app1
-  email: secondmaintainer@gmail.com
-company: Random Inc.
-website: https://website.com
-source: https://github.com/random/repo
-license: Apache-2.0
-description: |
- ### Interesting Title
- Some application content, and description
-`
+	if len(ruleSet.Rules) != 2 {
+		t.Errorf("Expected to be 2 tules but got %d", len(ruleSet.Rules))
+	}
+}
 
-	meta, err := app.Parse([]byte(input))
-	if err != nil {
-		t.Errorf("Failed to create app.Meta object.")
+func TestCreate_DuplicateKey(t *testing.T) {
+	ruleSet, err := CreateRuleSet(map[string][]string{
+		"title": {"App1", "App2"},
+	})
+	if err == nil {
+		t.Errorf("Expected to have error but had none.")
 	}
 
-	match, err := flt.Match(*meta)
-	if err != nil {
-		t.Errorf("Error occurred during Match operation: %s", err)
-	}
-	if !match {
-		t.Errorf("Expected to match but failed.")
+	expectedErrMsg := "Key 'title' appeared multiple times with values of 'App1, App2'. Currently this case is not unsupported."
+	if err.Error() != expectedErrMsg {
+		t.Errorf("Expected to have error '%s' but got '%s'", expectedErrMsg, err.Error())
 	}
 
+	if ruleSet != nil {
+		t.Errorf("Expected ruleSet to be nil but not nil.")
+	}
+}
+
+func TestCreate_RuleCreationFailure(t *testing.T) {
+	ruleSet, err := CreateRuleSet(map[string][]string{
+		"title[dummy]": {"App1"},
+	})
+	if err == nil {
+		t.Errorf("Expected to have error but had none.")
+	}
+
+	expectedErrMsg := "Unrecognized operator type 'dummy'"
+	if err.Error() != expectedErrMsg {
+		t.Errorf("Expected to have error '%s' but got '%s'", expectedErrMsg, err.Error())
+	}
+
+	if ruleSet != nil {
+		t.Errorf("Expected ruleSet to be nil but not nil.")
+	}
 }

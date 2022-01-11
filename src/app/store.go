@@ -88,7 +88,7 @@ func (s *Store) firstOrNil(match func(Meta) bool) *Meta {
 	return nil
 }
 
-// firstOrNil gets the last app that matches the given rule.
+// lastOrNil gets the last app that matches the given rule.
 // It returns nil if no matching apps were found.
 func (s *Store) lastOrNil(match func(Meta) bool) *Meta {
 	for i := len(s.apps) - 1; i >= 0; i-- {

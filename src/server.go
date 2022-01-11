@@ -50,7 +50,7 @@ func getAppByTitleAndVersion(c *gin.Context) {
 
 func listApps(c *gin.Context) {
 	q := c.Request.URL.Query()
-	flt, err := filter.Create(q)
+	flt, err := filter.CreateRuleSet(q)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, responseBodyForError(err))
 	}
