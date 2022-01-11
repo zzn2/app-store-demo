@@ -36,6 +36,17 @@ func getAppByTitle(c *gin.Context) {
 	}
 }
 
+func getAppByTitleAndVersion(c *gin.Context) {
+	title := c.Param("title")
+	version := c.Param("version")
+	app := store.GetByTitleAndVersion(title, version)
+	if app != nil {
+		c.JSON(http.StatusOK, app)
+	} else {
+		c.JSON(http.StatusNotFound, responseBodyForErrorMessage("App with title '%s' and version '%s' does not exist.", title, version))
+	}
+}
+
 func listApps(c *gin.Context) {
 	q := c.Request.URL.Query()
 	flt, err := filter.Create(q)
@@ -66,6 +77,7 @@ func main() {
 		v1.POST("/apps", newApp)
 		v1.GET("/apps", listApps)
 		v1.GET("/apps/:title", getAppByTitle)
+		v1.GET("/apps/:title/versions/:version", getAppByTitleAndVersion)
 	}
 
 	router.Run(":3001")
