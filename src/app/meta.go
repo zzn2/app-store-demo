@@ -25,6 +25,8 @@ type Meta struct {
 	Description string       `binding:"required"`
 }
 
+// Parse parses an yaml text into the Meta struct.
+// It returns nil along with the error if any error occurred during the parse.
 func Parse(data []byte) (*Meta, error) {
 	var m Meta
 	if err := yaml.Unmarshal(data, &m); err != nil {
@@ -34,6 +36,9 @@ func Parse(data []byte) (*Meta, error) {
 	return &m, nil
 }
 
+// MatchRule evaluates whether this Meta matches the given rule.
+// It returns true if matches otherwise returns false.
+// If any unexpected errors occurred during match operation, return the error.
 func (m *Meta) MatchRule(rule filter.Rule) (bool, error) {
 	switch strings.ToLower(rule.FieldName) {
 	case "title":
@@ -63,6 +68,9 @@ func (m *Meta) MatchRule(rule filter.Rule) (bool, error) {
 	}
 }
 
+// MatchRule evaluates whether this Meta matches the given ruleset.
+// It returns true if matches otherwise returns false.
+// If any unexpected errors occurred during match operation, return the error.
 func (m *Meta) MatchRuleSet(ruleSet filter.RuleSet) (bool, error) {
 	for _, rule := range ruleSet.Rules {
 		match, err := m.MatchRule(rule)
@@ -77,6 +85,7 @@ func (m *Meta) MatchRuleSet(ruleSet filter.RuleSet) (bool, error) {
 	return true, nil
 }
 
+// String returns the string representation of this object.
 func (m Meta) String() string {
 	return fmt.Sprintf("App: %s@%s", m.Title, m.Version)
 }
