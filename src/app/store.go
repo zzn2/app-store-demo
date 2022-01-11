@@ -1,3 +1,4 @@
+// Package app provides functionalities of managing metadata of apps.
 package app
 
 import (
@@ -7,6 +8,8 @@ import (
 	"github.com/zzn2/demo/appstore/filter"
 )
 
+// Store stores metadata of apps.
+// They can be searched by various filters.
 type Store struct {
 	apps []Meta
 }
@@ -21,20 +24,29 @@ func (s *Store) Add(app Meta) error {
 	return nil
 }
 
+// GetByTitle gets an app metadata using title.
+// It returns the matching metadata if exists, otherwise returns nil.
+// If multiple version exists for the same title, it returns the last saved version.
 func (s *Store) GetByTitle(title string) *Meta {
 	return s.lastOrNil(func(app Meta) bool {
 		return app.Title == title
 	})
 }
 
+// GetByTitleAndVersion gets an app metadata using title and version.
+// It returns the matching metadata if exists, otherwise returns nil.
 func (s *Store) GetByTitleAndVersion(title string, version string) *Meta {
 	// If multiple found, return the last one, which is likely to be the latest version.
-	// TODO: Should add version comparation logic here and only return the lastest version.
+	// TODO: Should add version comparing logic here and only return the latest version.
 	return s.lastOrNil(func(app Meta) bool {
 		return app.Title == title && app.Version == version
 	})
 }
 
+// List returns the list of stored apps.
+// It accepts a filter.RuleSet as parameter, only apps matching the rules could be listed in the result.
+// RuleSet could also be empty (i.e. contains no rules). In this case, all the apps will be listed in the result.
+// If no matching apps found, return an empty slice.
 func (s *Store) List(ruleSet filter.RuleSet) ([]Meta, error) {
 	result := make([]Meta, 0)
 	for _, app := range s.apps {
@@ -51,6 +63,8 @@ func (s *Store) List(ruleSet filter.RuleSet) ([]Meta, error) {
 	return result, nil
 }
 
+// filter returns the apps that matches the given rule in the store.
+// It returns an empty slice if no matching apps found.
 func (s *Store) filter(match func(Meta) bool) []Meta {
 	result := make([]Meta, 0)
 	for _, app := range s.apps {
@@ -62,6 +76,8 @@ func (s *Store) filter(match func(Meta) bool) []Meta {
 	return result
 }
 
+// firstOrNil gets the first app that matches the given rule.
+// It returns nil if no matching apps were found.
 func (s *Store) firstOrNil(match func(Meta) bool) *Meta {
 	for _, app := range s.apps {
 		if match(app) {
@@ -72,6 +88,8 @@ func (s *Store) firstOrNil(match func(Meta) bool) *Meta {
 	return nil
 }
 
+// firstOrNil gets the last app that matches the given rule.
+// It returns nil if no matching apps were found.
 func (s *Store) lastOrNil(match func(Meta) bool) *Meta {
 	for i := len(s.apps) - 1; i >= 0; i-- {
 		app := s.apps[i]
