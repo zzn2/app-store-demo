@@ -119,3 +119,8 @@ Containerize
 K8s deployment & Helm
 * https://docs.microsoft.com/en-us/learn/modules/aks-deploy-container-app/5-exercise-deploy-app
 * https://www.studytonight.com/post/what-is-helm-in-the-kubernetes-world
+
+## Future works
+
+* Add CI
+* Deploy with Helm
