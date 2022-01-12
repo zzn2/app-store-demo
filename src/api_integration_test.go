@@ -432,6 +432,17 @@ var scenarios = []struct {
 		400,
 		`{"error":"Error occurred during searching app: Unsupported rule for field 'dummy'"}[]`,
 	},
+	{
+		"List apps, filter with bad operator",
+		[]Request{
+			{"POST", "/apps", app1v1},
+			{"POST", "/apps", app1v2},
+			{"POST", "/apps", app2v1},
+			{"GET", "/apps?title=App1&version[dummy]=0.0.1", ""},
+		},
+		400,
+		`{"error":"Unrecognized operator type 'dummy'"}`,
+	},
 }
 
 func TestScenarios(t *testing.T) {

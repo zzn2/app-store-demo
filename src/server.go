@@ -53,6 +53,7 @@ func listApps(c *gin.Context) {
 	flt, err := filter.CreateRuleSet(q)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, responseBodyForError(err))
+		return
 	}
 
 	result, err := store.List(*flt)
