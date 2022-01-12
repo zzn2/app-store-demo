@@ -104,6 +104,9 @@ Reflection and struct tags
 * https://golangbot.com/reflection/
 * https://www.digitalocean.com/community/tutorials/how-to-use-struct-tags-in-go
 
+Concurrency
+* https://turtledev.in/posts/go-concurrency-patterns-double-checked-locking/
+
 Effective GO
 * https://go.dev/doc/effective_go
 

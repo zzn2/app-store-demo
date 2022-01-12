@@ -4,6 +4,7 @@ package app
 import (
 	"errors"
 	"fmt"
+	"sync"
 
 	"github.com/zzn2/demo/appstore/filter"
 )
@@ -14,12 +15,18 @@ type Store struct {
 	apps []Meta
 }
 
+var modifyLock sync.Mutex
+
 // Add a new app metadata into the store.
 // It returns error if the store already contains an app with the same title and version.
 func (s *Store) Add(app Meta) error {
 	if s.GetByTitleAndVersion(app.Title, app.Version) != nil {
 		return errors.New(fmt.Sprintf("App '%s' with version '%s' already exists.", app.Title, app.Version))
 	}
+
+	modifyLock.Lock()
+	defer modifyLock.Unlock()
+	// add lock to append operation to avoid potential racing cases.
 	s.apps = append(s.apps, app)
 	return nil
 }
