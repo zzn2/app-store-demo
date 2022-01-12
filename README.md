@@ -1,24 +1,28 @@
-# A demo API Server created by golang
+# A demo API Server by golang
 
-This is a demo API server created by golang. It uses the [gin-gonic](https://github.com/gin-gonic/gin) web framework.
+This is a demo API server created using [golang](https://go.dev/)uses it [gin-gonic](https://github.com/gin-gonic/gin) framework.
 
-It is an demo "app store", which supports to store and search metadata of apps.
+It is an demo "app store", which stores metadata of apps and makes them queryable.
+
+It stores app metadata in memory only for demo usage.
 
 A sample app meta looks like:
 
 ```yaml
-title: App w/ Invalid maintainer email
-version: 1.0.1
+title: App1
+version: 0.0.1
 maintainers:
-- name: Firstname Lastname
-  email: apptwohotmail.com
-company: Upbound Inc.
-website: https://upbound.io
-source: https://github.com/upbound/repo
+- name: First Maintainer
+  email: firstmaintainer@hotmail.com
+- name: Second Maintainer
+  email: secondmaintainer@gmail.com
+company: Random Inc.
+website: https://website.com
+source: https://github.com/random/repo
 license: Apache-2.0
 description: |
- ### blob of markdown
- More markdown
+ ### Interesting Title
+ Some application content, and description
  ```
 
 
@@ -34,27 +38,32 @@ POST /apps
 
 ```
 GET /apps/App1
-GET /apps/App1/version/0.0.1
+GET /apps/App1/versions/0.0.1
 ```
 
 ### List apps
+
+List all the apps.
+
+> Paging/Field selecting functions are not supported in this demo.
 
 ```
 GET /apps
 ```
 
-Also filters could be applied.
-For example, the following query lists all the apps with title "App1" (possibly multiple versions will be listed.)
+Filters could also be applied to search apps match the given rule set.
+
+For example, the following query lists all the apps with title "App1" (possibly multiple versions can be listed.)
 ```
 GET /apps?title=App1
 ```
 
-Filters could be added to multiple fields:
+Filters could be applied to multiple fields:
 ```
-GET /apps?title=App1&version=0.0.1
+GET /apps?title=App1&versions=0.0.1
 ```
 
-Filters can also be non-precise match by specifying with [LHS Brackets](https://christiangiacomi.com/posts/rest-design-principles/). For example, the following query will list apps which title contains "App":
+Filters can also be non-precise match by specifying [LHS Brackets](https://christiangiacomi.com/posts/rest-design-principles/). For example, the following query lists apps which title contains "App":
 ```
 GET /apps?title[like]=App
 ```
