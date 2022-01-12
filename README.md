@@ -122,5 +122,8 @@ K8s deployment & Helm
 
 ## Future works
 
+* Code tuning
 * Add CI
+* Add https support
+* And ingress configuration
 * Deploy with Helm
