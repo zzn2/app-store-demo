@@ -177,6 +177,12 @@ func TestEvaluate(t *testing.T) {
 			"",
 		},
 		{
+			"Age[lt]=25",
+			"20",
+			false,
+			"Operator '<' currently unsupported.",
+		},
+		{
 			"Age[gt]=25",
 			"20",
 			false,

@@ -25,13 +25,13 @@ func CreateRuleSet(queryParams map[string][]string) (*RuleSet, error) {
 		if err != nil {
 			return nil, err
 		}
-		flt.addRule(*rule)
+		flt.AddRule(*rule)
 	}
 	return flt, nil
 }
 
-// addRule adds a new rule to the given RuleSet.
-func (f *RuleSet) addRule(rule Rule) {
+// AddRule adds a new rule to the given RuleSet.
+func (f *RuleSet) AddRule(rule Rule) {
 	f.Rules = append(f.Rules, rule)
 }
 
