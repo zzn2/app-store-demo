@@ -76,6 +76,11 @@ GET /apps?title[like]=App
 
 Refer to [integration test scenarios](src/api_integration_test.go) for more use cases.
 
+## Build and deploy
+
+```
+./scripts/build.sh
+```
 
 ## Referred Links
 
