@@ -3,7 +3,6 @@ package filter
 import (
 	"errors"
 	"fmt"
-	"reflect"
 	"regexp"
 	"strings"
 
@@ -104,28 +103,6 @@ func (r *Rule) Evaluate(value string) (bool, error) {
 		return strings.Contains(value, string(r.Value)), nil
 	default:
 		return false, errors.New(fmt.Sprintf("Operator '%s' currently unsupported.", r.Op))
-	}
-}
-
-func getStringFieldValue(obj interface{}, fieldName string) (string, error) {
-	// TODO: support non-case sensitive case
-	if reflect.ValueOf(obj).Kind() == reflect.Struct {
-		typ := reflect.TypeOf(obj)
-		_, exists := typ.FieldByName(fieldName)
-		if !exists {
-			return "", errors.New(fmt.Sprintf("Field '%s' does not exist in struct %s.", fieldName, typ))
-		}
-
-		v := reflect.ValueOf(obj)
-		field := v.FieldByName(fieldName)
-		kind := field.Kind()
-		if kind != reflect.String {
-			return "", errors.New(fmt.Sprintf("Field '%s' is with '%s' type. Currently only supports 'string' fileds.", fieldName, kind))
-		}
-
-		return field.String(), nil
-	} else {
-		return "", errors.New(fmt.Sprintf("Obj '%s' is with '%T' type. Currently only supports structs.", obj, obj))
 	}
 }
 
