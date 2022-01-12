@@ -40,6 +40,8 @@ func Parse(data []byte) (*Meta, error) {
 // It returns true if matches otherwise returns false.
 // If any unexpected errors occurred during match operation, return the error.
 func (m *Meta) MatchRule(rule filter.Rule) (bool, error) {
+	// TODO: embed the logic into the struct using struct tags
+	// https://www.digitalocean.com/community/tutorials/how-to-use-struct-tags-in-go
 	switch strings.ToLower(rule.FieldName) {
 	case "title":
 		return rule.Evaluate(m.Title)
