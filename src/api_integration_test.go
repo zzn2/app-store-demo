@@ -421,6 +421,17 @@ var scenarios = []struct {
 			{"Title":"App1","Version":"0.0.1","Maintainers":[{"Name":"firstmaintainer app1","Email":"firstmaintainer@hotmail.com"},{"Name":"secondmaintainer app1","Email":"secondmaintainer@gmail.com"}],"Company":"Random Inc.","Website":"https://website.com","Source":"https://github.com/random/repo","License":"Apache-2.0","Description":"### Interesting Title\nSome application content, and description\n"}
 		]`,
 	},
+	{
+		"List apps, filter with bad field names",
+		[]Request{
+			{"POST", "/apps", app1v1},
+			{"POST", "/apps", app1v2},
+			{"POST", "/apps", app2v1},
+			{"GET", "/apps?title=App1&dummy=unknown", ""},
+		},
+		400,
+		`{"error":"Error occurred during searching app: Unsupported rule for field 'dummy'"}[]`,
+	},
 }
 
 func TestScenarios(t *testing.T) {
