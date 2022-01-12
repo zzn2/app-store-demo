@@ -13,8 +13,10 @@ docker push $IMAGE_NAME
 
 # Replace the values in template using sed for a while.
 # TODO: Learn how to deploy with Helm.
-sed -i -e "s/{{.Values.registry}}/$REGISTRY/g" k8s/deployment.yaml
-sed -i -e "s/{{.Values.dockerTag}}/$COMMIT/g" k8s/deployment.yaml
+cp k8s/deployment.yaml .
+sed -i -e "s/{{.Values.registry}}/$REGISTRY/g" deployment.yaml
+sed -i -e "s/{{.Values.dockerTag}}/$COMMIT/g" deployment.yaml
 
 # Deploy to kubernetes cluster
-kubectl apply -f k8s/deployment.yaml
+kubectl apply -f deployment.yaml
+rm deployment.yaml
