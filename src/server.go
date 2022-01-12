@@ -87,14 +87,15 @@ func setupServer() *gin.Engine {
 	return router
 }
 
-// clearStore clears the existing app store, replace with a new empty one.
-// This function is not supposed to be called in production code.
-// it is aimed to be called by integration test code to make a clean status for every test scenario.
-func clearStore() {
+// This function sets up a new, empty store.
+// It is supposed to be called when the app starts up.
+// It could also be called from the integration test in order to get a clean store for each test scenario.
+func setupStore() {
 	var emptyStore app.Store
 	store = &emptyStore
 }
 
 func main() {
+	setupStore()
 	setupServer().Run(":3001")
 }

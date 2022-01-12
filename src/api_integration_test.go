@@ -477,7 +477,7 @@ func TestScenarios(t *testing.T) {
 
 	for _, tt := range scenarios {
 		// Clean the store to make the data independentable between test cases.
-		clearStore()
+		setupStore()
 
 		t.Run(tt.scenarioTitle, func(t *testing.T) {
 			var statusCode int
