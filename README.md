@@ -79,7 +79,7 @@ Refer to [integration test scenarios](src/api_integration_test.go) for more use 
 ## Build and deploy
 
 ```
-./deploy/build.sh
+./deploy.sh
 ```
 
 ## Referred Links
