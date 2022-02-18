@@ -21,17 +21,17 @@ description: |
  ### Interesting Title
  Some application content, and description
 
-### Add a invalid app
+### Add an invalid app
 POST {{baseUrl}}/apps
 Content-Type: application/json
 Accept: application/json
 
 unknown: dummy
-title: Valid App 1
+title: Invalid App 1
 version: 0.0.1
 maintainers:
 - name: 1
-  email: abc@def.org
+  email: malformed
 website: http://1
 company: random inc.
 source: https://github.com/random/repo
