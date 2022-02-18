@@ -70,7 +70,7 @@ func (m *Meta) MatchRule(rule filter.Rule) (bool, error) {
 	}
 }
 
-// MatchRule evaluates whether this Meta matches the given ruleset.
+// MatchRuleSet evaluates whether this Meta matches the given ruleset.
 // It returns true if matches otherwise returns false.
 // If any unexpected errors occurred during match operation, return the error.
 func (m *Meta) MatchRuleSet(ruleSet filter.RuleSet) (bool, error) {

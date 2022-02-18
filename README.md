@@ -2,7 +2,7 @@
 
 This is a demo API server created using [golang](https://go.dev/) and [gin-gonic](https://github.com/gin-gonic/gin).
 
-It is an demo "app store", which stores metadata of apps and makes them queryable.
+It is a demo "app store", which stores metadata of apps and makes them queryable.
 It does not use databases, only stores data in memory.
 
 A sample app metadata looks like:
