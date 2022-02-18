@@ -155,7 +155,7 @@ var scenarios = []struct {
 		201,
 		`{
 			"Title":"App1",
-		    "Version":"0.0.1",
+			"Version":"0.0.1",
 			"Maintainers":
 			[
 				{"Name":"firstmaintainer app1","Email":"firstmaintainer@hotmail.com"},
@@ -177,7 +177,7 @@ var scenarios = []struct {
 		201,
 		`{
 			"Title":"App1",
-		    "Version":"0.0.2",
+			"Version":"0.0.2",
 			"Maintainers":
 			[
 				{"Name":"firstmaintainer app1","Email":"firstmaintainer@hotmail.com"},
@@ -246,7 +246,7 @@ var scenarios = []struct {
 		200,
 		`{
 			"Title":"App1",
-		    "Version":"0.0.2",
+			"Version":"0.0.2",
 			"Maintainers":
 			[
 				{"Name":"firstmaintainer app1","Email":"firstmaintainer@hotmail.com"},
@@ -270,7 +270,7 @@ var scenarios = []struct {
 		200,
 		`{
 			"Title":"App1",
-		    "Version":"0.0.1",
+			"Version":"0.0.1",
 			"Maintainers":
 			[
 				{"Name":"firstmaintainer app1","Email":"firstmaintainer@hotmail.com"},
@@ -292,7 +292,7 @@ var scenarios = []struct {
 		200,
 		`{
 			"Title":"App3 with space in title",
-		    "Version":"0.0.1",
+			"Version":"0.0.1",
 			"Maintainers":
 			[
 				{"Name":"firstmaintainer app3","Email":"firstmaintainer@hotmail.com"},
