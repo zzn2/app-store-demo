@@ -79,7 +79,7 @@ Refer to [integration test scenarios](src/api_integration_test.go) for more use 
 ## Build and deploy
 
 ```
-./scripts/build.sh
+./deploy/build.sh
 ```
 
 ## Referred Links
@@ -132,4 +132,4 @@ K8s deployment & Helm
 * Add authentication
 * Add https support
 * And ingress configuration
-* Deploy with Helm
+
