@@ -7,6 +7,7 @@ import (
 	"sync"
 
 	"github.com/zzn2/demo/appstore/filter"
+	"github.com/zzn2/demo/appstore/semver"
 )
 
 // Store stores metadata of apps.
@@ -20,6 +21,10 @@ var modifyLock sync.Mutex
 // Add a new app metadata into the store.
 // It returns error if the store already contains an app with the same title and version.
 func (s *Store) Add(app Meta) error {
+	if app.Version == semver.Empty {
+		return errors.New(fmt.Sprintf("App '%s' lacks of version or the version could not be '%s'.)", app.Title, app.Version))
+	}
+
 	if s.GetByTitleAndVersion(app.Title, app.Version) != nil {
 		return errors.New(fmt.Sprintf("App '%s' with version '%s' already exists.", app.Title, app.Version))
 	}
@@ -42,7 +47,7 @@ func (s *Store) GetByTitle(title string) *Meta {
 
 // GetByTitleAndVersion gets an app metadata using title and version.
 // It returns the matching metadata if exists, otherwise returns nil.
-func (s *Store) GetByTitleAndVersion(title string, version string) *Meta {
+func (s *Store) GetByTitleAndVersion(title string, version semver.Version) *Meta {
 	// If multiple found, return the last one, which is likely to be the latest version.
 	// TODO: Should add version comparing logic here and only return the latest version.
 	return s.lastOrNil(func(app Meta) bool {

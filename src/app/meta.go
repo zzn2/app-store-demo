@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/zzn2/demo/appstore/filter"
+	"github.com/zzn2/demo/appstore/semver"
 	"gopkg.in/yaml.v2"
 )
 
@@ -15,14 +16,14 @@ type Maintainer struct {
 }
 
 type Meta struct {
-	Title       string       `binding:"required"`
-	Version     string       `binding:"required"`
-	Maintainers []Maintainer `binding:"required,dive"`
-	Company     string       `binding:"required"`
-	Website     string       `binding:"required,url"`
-	Source      string       `binding:"required"`
-	License     string       `binding:"required"`
-	Description string       `binding:"required"`
+	Title       string         `binding:"required"`
+	Version     semver.Version `binding:"required"`
+	Maintainers []Maintainer   `binding:"required,dive"`
+	Company     string         `binding:"required"`
+	Website     string         `binding:"required,url"`
+	Source      string         `binding:"required"`
+	License     string         `binding:"required"`
+	Description string         `binding:"required"`
 }
 
 // Parse parses an yaml text into the Meta struct.
@@ -46,7 +47,7 @@ func (m *Meta) MatchRule(rule filter.Rule) (bool, error) {
 	case "title":
 		return rule.Evaluate(m.Title)
 	case "version":
-		return rule.Evaluate(m.Version)
+		return rule.Evaluate(m.Version.String())
 	case "maintainer.name":
 		for _, maintainer := range m.Maintainers {
 			match, err := rule.Evaluate(maintainer.Name)
