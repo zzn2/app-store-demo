@@ -1,8 +1,8 @@
-// Package semver provides parsing and validation logic for [Semantic Versioning](https://semver.org/).
+// Package semver provides parsing and validation logic for [Semantic Version](https://semver.org/)s.
 //
 // Note:
-//   1. Here we only implementing a subset of Semantic Versioning just for demo usage.
-//   2. Most of the code referred to the implemention of https://github.com/blang/semver.
+//   1. Here we only implement subset of Semantic Versioning just for demo usage.
+//   2. Most of the code referred the implemention from https://github.com/blang/semver.
 package semver
 
 import (
@@ -46,6 +46,8 @@ func parseSection(text string) (uint64, error) {
 	return res, nil
 }
 
+// Parse parses a text into a Version object.
+// errors will be returned if the text is not a valid format.
 func Parse(s string) (Version, error) {
 	if len(s) == 0 {
 		return Version{}, errors.New("Failed to parse version: Empty string")
@@ -74,6 +76,7 @@ func Parse(s string) (Version, error) {
 	return v, nil
 }
 
+// UnmarshalYAML will be called when deserializing a Version object from part of YAML text.
 func (v *Version) UnmarshalYAML(unmarshal func(interface{}) error) error {
 	var text string
 	err := unmarshal(&text)
@@ -92,10 +95,12 @@ func (v *Version) UnmarshalYAML(unmarshal func(interface{}) error) error {
 	return nil
 }
 
+// MarshalJSON will be called when serializing a Version object into text as part of json.
 func (v Version) MarshalJSON() ([]byte, error) {
 	return []byte(fmt.Sprintf("%q", v.String())), nil
 }
 
+// String returns the string representation of the Version object.
 func (v Version) String() string {
 	return fmt.Sprintf("%d.%d.%d", v.Major, v.Minor, v.Patch)
 }
