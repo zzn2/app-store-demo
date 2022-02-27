@@ -213,7 +213,7 @@ var scenarios = []struct {
 			{"POST", "/apps", appWithoutVersion},
 		},
 		400,
-		`{"error":"Key: 'Meta.Version' Error:Field validation for 'Version' failed on the 'required' tag"}`,
+		`{"error":"App 'App4' lacks of version or the version could not be '0.0.0'.)"}`,
 	},
 	{
 		"Create app with bad maintainer email, response 400",

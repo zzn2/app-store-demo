@@ -1,12 +1,14 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"github.com/zzn2/demo/appstore/app"
 	"github.com/zzn2/demo/appstore/filter"
+	"github.com/zzn2/demo/appstore/semver"
 )
 
 var store *app.Store
@@ -15,6 +17,12 @@ func newApp(c *gin.Context) {
 	var app app.Meta
 
 	if err := c.ShouldBindYAML(&app); err != nil {
+		c.JSON(http.StatusBadRequest, responseBodyForError(err))
+		return
+	}
+
+	if app.Version == semver.Empty {
+		err := errors.New(fmt.Sprintf("App '%s' lacks of version or the version could not be '%s'.)", app.Title, app.Version))
 		c.JSON(http.StatusBadRequest, responseBodyForError(err))
 		return
 	}
@@ -39,7 +47,11 @@ func getAppByTitle(c *gin.Context) {
 
 func getAppByTitleAndVersion(c *gin.Context) {
 	title := c.Param("title")
-	version := c.Param("version")
+	versionText := c.Param("version")
+	version, err := semver.Parse(versionText)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, responseBodyForErrorMessage("Bad format of version '%s'", versionText))
+	}
 	app := store.GetByTitleAndVersion(title, version)
 	if app != nil {
 		c.JSON(http.StatusOK, app)
