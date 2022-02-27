@@ -48,34 +48,28 @@ func parseSection(text string) (uint64, error) {
 
 func Parse(s string) (Version, error) {
 	if len(s) == 0 {
-		return Version{}, errors.New("Version string empty")
+		return Version{}, errors.New("Failed to parse version: Empty string")
 	}
 
 	// Split into major.minor.(patch+pr+meta)
 	parts := strings.SplitN(s, ".", 3)
 	if len(parts) != 3 {
-		return Version{}, errors.New("No Major.Minor.Patch elements found")
+		return Version{}, fmt.Errorf("Failed to parse version '%s': Version text must be in 'Major.Minor.Patch' format", s)
 	}
 
-	major, err := parseSection(parts[0])
-	if err != nil {
-		return Version{}, err
-	}
-
-	minor, err := parseSection(parts[1])
-	if err != nil {
-		return Version{}, err
-	}
-
-	patch, err := parseSection(parts[2])
-	if err != nil {
-		return Version{}, err
+	sections := make([]uint64, 3)
+	for i := range sections {
+		val, err := parseSection(parts[i])
+		if err != nil {
+			return Version{}, fmt.Errorf("Failed to parse version '%s': %w", s, err)
+		}
+		sections[i] = val
 	}
 
 	v := Version{}
-	v.Major = major
-	v.Minor = minor
-	v.Patch = patch
+	v.Major = sections[0]
+	v.Minor = sections[1]
+	v.Patch = sections[2]
 
 	return v, nil
 }

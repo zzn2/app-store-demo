@@ -10,9 +10,10 @@ func TestEvaluate(t *testing.T) {
 	}{
 		{"0.0.1", Version{0, 0, 1}, ""},
 		{"1.0.1", Version{1, 0, 1}, ""},
-		{"-1.0.1", Version{0, 0, 0}, `Invalid character(s) found in number "-1"`},
-		{"01.0.1", Version{0, 0, 0}, `Version sections must not contain leading zeroes: "01"`},
-		{"0.1", Version{0, 0, 0}, `No Major.Minor.Patch elements found`},
+		{"-1.0.1", Version{0, 0, 0}, `Failed to parse version '-1.0.1': Invalid character(s) found in number "-1"`},
+		{"01.0.1", Version{0, 0, 0}, `Failed to parse version '01.0.1': Version sections must not contain leading zeroes: "01"`},
+		{"0.1", Version{0, 0, 0}, `Failed to parse version '0.1': Version text must be in 'Major.Minor.Patch' format`},
+		{"", Version{0, 0, 0}, `Failed to parse version: Empty string`},
 	}
 
 	for _, tt := range tests {
