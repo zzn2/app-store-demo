@@ -4,22 +4,29 @@ import (
 	"testing"
 
 	"github.com/zzn2/demo/appstore/filter"
+	"github.com/zzn2/demo/appstore/semver"
+)
+
+var (
+	v_0_0_1 = semver.Version{Major: 0, Minor: 0, Patch: 1}
+	v_0_0_2 = semver.Version{Major: 0, Minor: 0, Patch: 2}
+	v_0_0_3 = semver.Version{Major: 0, Minor: 0, Patch: 3}
 )
 
 var (
 	app1v1 = Meta{
 		Title:   "App1",
-		Version: "0.0.1",
+		Version: v_0_0_1,
 	}
 
 	app1v2 = Meta{
 		Title:   "App1",
-		Version: "0.0.2",
+		Version: v_0_0_2,
 	}
 
 	app2v1 = Meta{
 		Title:   "App2",
-		Version: "0.0.1",
+		Version: v_0_0_1,
 	}
 )
 
@@ -95,27 +102,27 @@ func TestGetByTitleAndVersion(t *testing.T) {
 	store.Add(app1v2)
 	store.Add(app2v1)
 
-	result1 := store.GetByTitleAndVersion("App1", "0.0.1")
+	result1 := store.GetByTitleAndVersion("App1", v_0_0_1)
 	if !equals(*result1, app1v1) {
 		t.Errorf("Expected to be '%s' but got '%s'", result1, app1v2)
 	}
 
-	result2 := store.GetByTitleAndVersion("App1", "0.0.2")
+	result2 := store.GetByTitleAndVersion("App1", v_0_0_2)
 	if !equals(*result2, app1v2) {
 		t.Errorf("Expected to be '%s' but got '%s'", result2, app1v2)
 	}
 
-	result3 := store.GetByTitleAndVersion("App1", "0.0.3")
+	result3 := store.GetByTitleAndVersion("App1", v_0_0_3)
 	if result3 != nil {
 		t.Errorf("Expected to be nil but got '%s'", result3)
 	}
 
-	result4 := store.GetByTitleAndVersion("App2", "0.0.1")
+	result4 := store.GetByTitleAndVersion("App2", v_0_0_1)
 	if !equals(*result4, app2v1) {
 		t.Errorf("Expected to be '%s' but got '%s'", result4, app2v1)
 	}
 
-	result5 := store.GetByTitleAndVersion("App3", "0.0.1")
+	result5 := store.GetByTitleAndVersion("App3", v_0_0_1)
 	if result5 != nil {
 		t.Errorf("Expected to be nil but got '%s'", result5)
 	}
