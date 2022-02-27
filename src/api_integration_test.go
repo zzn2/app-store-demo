@@ -106,6 +106,22 @@ description: |
  ### Interesting Title
  Some application content, and description
 `
+const appWithBadVersion = `
+title: App4
+version: 0.0.a
+maintainers:
+- name: firstmaintainer app1
+  email: firstmaintainer@hotmail.com
+- name: secondmaintainer app1
+  email: secondmaintainer@gmail.com
+company: Random Inc.
+website: https://website.com
+source: https://github.com/random/repo
+license: Apache-2.0
+description: |
+ ### Interesting Title
+ Some application content, and description
+`
 const appWithBadMaintainerEmail = `
 title: App5
 version: 0.0.1
@@ -214,6 +230,14 @@ var scenarios = []struct {
 		},
 		400,
 		`{"error":"App 'App4' lacks of version or the version could not be '0.0.0'.)"}`,
+	},
+	{
+		"Create app with bad version, response 400",
+		[]Request{
+			{"POST", "/apps", appWithBadVersion},
+		},
+		400,
+		`{"error":"Failed to parse version '0.0.a': Invalid character(s) found in number \"a\""}`,
 	},
 	{
 		"Create app with bad maintainer email, response 400",
