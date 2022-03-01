@@ -380,7 +380,7 @@ var scenarios = []struct {
 		]`,
 	},
 	{
-		"List apps, filter with app title (multiple results)",
+		"List apps, filter with app title, multiple results",
 		[]Request{
 			{"POST", "/apps", app1v1},
 			{"POST", "/apps", app1v2},
@@ -394,7 +394,7 @@ var scenarios = []struct {
 		]`,
 	},
 	{
-		"List apps, filter with app title (single result)",
+		"List apps, filter with app title, single result",
 		[]Request{
 			{"POST", "/apps", app1v1},
 			{"POST", "/apps", app1v2},
@@ -407,7 +407,7 @@ var scenarios = []struct {
 		]`,
 	},
 	{
-		"List apps, filter with app title (no result)",
+		"List apps, filter with app title, no result",
 		[]Request{
 			{"POST", "/apps", app1v1},
 			{"POST", "/apps", app1v2},
@@ -446,6 +446,30 @@ var scenarios = []struct {
 		]`,
 	},
 	{
+		"List apps, filter with version comparision",
+		[]Request{
+			{"POST", "/apps", app1v1},
+			{"POST", "/apps", app1v2},
+			{"POST", "/apps", app2v1},
+			{"GET", "/apps?title=App1&version[gt]=0.0.1", ""},
+		},
+		200,
+		`[
+			{"Title":"App1","Version":"0.0.2","Maintainers":[{"Name":"firstmaintainer app1","Email":"firstmaintainer@hotmail.com"},{"Name":"secondmaintainer app1","Email":"secondmaintainer@gmail.com"}],"Company":"Random Inc.","Website":"https://website.com","Source":"https://github.com/random/repo","License":"Apache-2.0","Description":"### Interesting Title\nSome application content, and description\n"}
+		]`,
+	},
+	{
+		"List apps, filter with app name comparision, will fail",
+		[]Request{
+			{"POST", "/apps", app1v1},
+			{"POST", "/apps", app1v2},
+			{"POST", "/apps", app2v1},
+			{"GET", "/apps?title[lt]=App1", ""},
+		},
+		400,
+		`{"error":"Failed to create rule: Type 'string' does not support 'LessThan' operator"}`,
+	},
+	{
 		"List apps, filter with bad field names",
 		[]Request{
 			{"POST", "/apps", app1v1},
@@ -454,7 +478,7 @@ var scenarios = []struct {
 			{"GET", "/apps?title=App1&dummy=unknown", ""},
 		},
 		400,
-		`{"error":"Error occurred during searching app: Unsupported rule for field 'dummy'"}[]`,
+		`{"error":"Failed to create rule: Field with name 'dummy' does not exist."}`,
 	},
 	{
 		"List apps, filter with bad operator",
