@@ -145,8 +145,8 @@ func TestList(t *testing.T) {
 		t.Errorf("Expected to be 3 items but got %d", len(result))
 	}
 
-	rule, _ := filter.ParseRule("title=App1")
-	ruleSet.AddRule(*rule)
+	rule, _ := filter.ParseRule("title=App1", app1v1)
+	ruleSet.AddRule(rule)
 
 	result, err = store.List(ruleSet)
 	if err != nil {
@@ -156,15 +156,12 @@ func TestList(t *testing.T) {
 		t.Errorf("Expected to be 2 items but got %d", len(result))
 	}
 
-	rule, _ = filter.ParseRule("unknown=App1")
-	ruleSet.AddRule(*rule)
+	rule, _ = filter.ParseRule("title=NonExist", app1v1)
+	ruleSet.AddRule(rule)
 
 	result, err = store.List(ruleSet)
 	if err != nil {
-		expectedErrMsg := "Error occurred during searching app: Unsupported rule for field 'unknown'"
-		if err.Error() != expectedErrMsg {
-			t.Errorf("Expected error message to be '%s' but got '%s'", expectedErrMsg, err.Error())
-		}
+		t.Errorf("Expected to be no error but got '%s'", err.Error())
 	}
 	if len(result) != 0 {
 		t.Errorf("Expected to be 0 items but got %d", len(result))

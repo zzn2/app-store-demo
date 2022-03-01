@@ -2,7 +2,6 @@
 package app
 
 import (
-	"errors"
 	"fmt"
 	"sync"
 
@@ -22,11 +21,11 @@ var modifyLock sync.Mutex
 // It returns error if the store already contains an app with the same title and version.
 func (s *Store) Add(app Meta) error {
 	if app.Version == semver.Empty {
-		return errors.New(fmt.Sprintf("App '%s' lacks of version or the version could not be '%s'.)", app.Title, app.Version))
+		return fmt.Errorf("App '%s' lacks of version or the version could not be '%s'.)", app.Title, app.Version)
 	}
 
 	if s.GetByTitleAndVersion(app.Title, app.Version) != nil {
-		return errors.New(fmt.Sprintf("App '%s' with version '%s' already exists.", app.Title, app.Version))
+		return fmt.Errorf("App '%s' with version '%s' already exists.", app.Title, app.Version)
 	}
 
 	modifyLock.Lock()
@@ -62,9 +61,9 @@ func (s *Store) GetByTitleAndVersion(title string, version semver.Version) *Meta
 func (s *Store) List(ruleSet filter.RuleSet) ([]Meta, error) {
 	result := make([]Meta, 0)
 	for _, app := range s.apps {
-		matched, err := app.MatchRuleSet(ruleSet)
+		matched, err := ruleSet.Match(app)
 		if err != nil {
-			return result, errors.New(fmt.Sprintf("Error occurred during searching app: %s", err))
+			return result, fmt.Errorf("Error occurred during searching app: %s", err)
 		}
 
 		if matched {

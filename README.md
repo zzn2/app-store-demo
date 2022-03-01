@@ -66,12 +66,17 @@ GET /apps?title=App1
 
 Filters could be applied to multiple fields:
 ```
-GET /apps?title=App1&versions=0.0.1
+GET /apps?title=App1&version=0.0.1
 ```
 
 Filters can also be non-precise match by specifying [LHS Brackets](https://christiangiacomi.com/posts/rest-design-principles/). For example, the following query lists apps which title contains "App":
 ```
 GET /apps?title[like]=App
+```
+
+"LessThan" or "GreaterThan" operator can be used to list apps with specific version range:
+```
+GET /apps?title=App1&version[gt]=0.0.2
 ```
 
 Refer to [integration test scenarios](src/api_integration_test.go) for more use cases.

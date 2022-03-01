@@ -2,13 +2,22 @@ package filter
 
 import (
 	"testing"
+
+	"github.com/zzn2/demo/appstore/semver"
 )
+
+type Meta struct {
+	Title   string
+	Version semver.Version
+}
+
+var app Meta
 
 func TestCreate(t *testing.T) {
 	ruleSet, err := CreateRuleSet(map[string][]string{
 		"title[like]": {"App"},
 		"version":     {"0.0.1"},
-	})
+	}, app)
 	if err != nil {
 		t.Errorf("Failed to create RuleSet: %e", err)
 	}
@@ -21,7 +30,7 @@ func TestCreate(t *testing.T) {
 func TestCreate_DuplicateKey(t *testing.T) {
 	ruleSet, err := CreateRuleSet(map[string][]string{
 		"title": {"App1", "App2"},
-	})
+	}, app)
 	if err == nil {
 		t.Errorf("Expected to have error but had none.")
 	}
@@ -31,15 +40,15 @@ func TestCreate_DuplicateKey(t *testing.T) {
 		t.Errorf("Expected to have error '%s' but got '%s'", expectedErrMsg, err.Error())
 	}
 
-	if ruleSet != nil {
-		t.Errorf("Expected ruleSet to be nil but not nil.")
+	if len(ruleSet.Rules) != 0 {
+		t.Errorf("Expected ruleSet to be empty but not empty.")
 	}
 }
 
 func TestCreate_RuleCreationFailure(t *testing.T) {
 	ruleSet, err := CreateRuleSet(map[string][]string{
 		"title[dummy]": {"App1"},
-	})
+	}, app)
 	if err == nil {
 		t.Errorf("Expected to have error but had none.")
 	}
@@ -49,7 +58,7 @@ func TestCreate_RuleCreationFailure(t *testing.T) {
 		t.Errorf("Expected to have error '%s' but got '%s'", expectedErrMsg, err.Error())
 	}
 
-	if ruleSet != nil {
-		t.Errorf("Expected ruleSet to be nil but not nil.")
+	if len(ruleSet.Rules) != 0 {
+		t.Errorf("Expected ruleSet to be empty but not empty.")
 	}
 }
