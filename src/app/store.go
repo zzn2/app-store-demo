@@ -62,7 +62,7 @@ func (s *Store) GetByTitleAndVersion(title string, version semver.Version) *Meta
 func (s *Store) List(ruleSet filter.RuleSet) ([]Meta, error) {
 	result := make([]Meta, 0)
 	for _, app := range s.apps {
-		matched, err := app.MatchRuleSet(ruleSet)
+		matched, err := ruleSet.Match(app)
 		if err != nil {
 			return result, errors.New(fmt.Sprintf("Error occurred during searching app: %s", err))
 		}
